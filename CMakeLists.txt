@@ -14,26 +14,23 @@ include(FindPkgConfig)
 include(ExternalProject)
 include(FetchContent)
 
-#enable_testing()
+
 add_subdirectory(src/)
-#add_subdirectory(tests)
+
+set(Boost_USE_STATIC_LIBS OFF)
+find_package(Boost 1.70 REQUIRED COMPONENTS
+  chrono
+  )
 
 make_directory(external/)
 
-ExternalProject_Add(djpet_software
-  GIT_REPOSITORY https://aleksander_gajos@bitbucket.org/fpgafais/djpet_software.git
-  PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external/
-  GIT_TAG c2846e15
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  )
+# ExternalProject_Add(djpet_software
+#   GIT_REPOSITORY https://aleksander_gajos@bitbucket.org/fpgafais/djpet_software.git
+#   PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external/
+r #   GIT_TAG c2846e15
+#   CONFIGURE_COMMAND ""
+#   BUILD_COMMAND ""
+#   INSTALL_COMMAND ""
+#   )
 
-FetchContent_Declare(json
-  GIT_REPOSITORY https://github.com/nlohmann/json.git
-  PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external/
-  INSTALL_COMMAND ""
-  )
-
-FetchContent_MakeAvailable(json)
-
+add_subdirectory(external/json)

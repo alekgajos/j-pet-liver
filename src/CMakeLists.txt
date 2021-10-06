@@ -7,6 +7,7 @@ project(${EXECUTABLE} VERSION 0.1
 
 set(SOURCES
   setup.cpp
+  signals.cpp
   liver.cpp
   )
 
@@ -18,11 +19,10 @@ target_compile_options(
   -Wall -Wextra -Werror -pedantic
   )
 
-target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../external/src/djpet_software/Unpacker_v2/)
+target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../external/djpet_software/Unpacker_v2/)
 
-#target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-#target_include_directories(${EXECUTABLE} SYSTEM PUBLIC ${cairomm_INCLUDE_DIRS} ${gtkmm_INCLUDE_DIRS})
+target_link_libraries(${EXECUTABLE} PRIVATE
+  nlohmann_json::nlohmann_json
+  ${Boost_LIBRARIES}
+  )
 
-#target_link_libraries(${EXECUTABLE} Slider ${cairomm_LIBRARIES} ${gtkmm_LIBRARIES})
-
-target_link_libraries(${EXECUTABLE} PRIVATE nlohmann_json::nlohmann_json)

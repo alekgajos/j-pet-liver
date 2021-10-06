@@ -24,11 +24,12 @@ struct Module {
 
 struct Scin {
 
+  int id;
   double x;
   double y;
   Module& mod;
 
-  Scin(double p_x, double p_y, Module& p_parent): x(p_x), y(p_y), mod(p_parent){}
+  Scin(int p_id, double p_x, double p_y, Module& p_parent): id(p_id), x(p_x), y(p_y), mod(p_parent){}
   
 };
 
@@ -68,6 +69,10 @@ public:
   }
 
   void fillEndpointMapping();
+
+  const Channel& findChannel(std::uint32_t addr, std::uint8_t ch) const {
+    return fEndpointToChannel.at(addr).at(ch);
+  }
   
 private:
   void loadFromFile(const char* filename);

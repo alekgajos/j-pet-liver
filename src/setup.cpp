@@ -37,10 +37,10 @@ void Setup::loadFromFile(const char *filename) {
     int slot_id = item.value()["slot_id"].get<int>();
     double x = std::stod(item.value()["xcenter"].get<std::string>());
     double y = std::stod(item.value()["ycenter"].get<std::string>());
-
+    
     fScins.emplace(std::piecewise_construct,
                    std::forward_as_tuple(id),
-                   std::forward_as_tuple(x, y, fModules.at(slot_id))
+                   std::forward_as_tuple(id, x, y, fModules.at(slot_id))
                    );
   }
 
