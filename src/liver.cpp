@@ -1,3 +1,7 @@
+#include <bits/stdint-uintn.h>
+#include <boost/chrono/duration.hpp>
+#include <boost/chrono/system_clocks.hpp>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -8,6 +12,7 @@
 
 #include <boost/format.hpp>
 #include <boost/histogram.hpp>
+#include <boost/chrono.hpp>
 
 #define SUPPRESS_TRIGGER_MISMATCH_ERROR
 #pragma GCC diagnostic push
@@ -32,10 +37,10 @@ int main(int // argc
     std::vector<unsigned int> data;
 
     unpacker::meta_t meta_data;
-    std::map<unsigned int, ENDPData> original_data;
-    std::map<unsigned int, std::vector<unpacker::hit_t>> filtered_data;
-    std::map<unsigned int, std::vector<unpacker::sigmat_t>> preproc_data;
-    std::map<unsigned int, std::string> paths_to_tdc_calib;
+    std::unordered_map<unsigned int, ENDPData> original_data;
+    std::unordered_map<unsigned int, std::vector<unpacker::hit_t>> filtered_data;
+    std::unordered_map<unsigned int, std::vector<unpacker::sigmat_t>> preproc_data;
+    std::unordered_map<unsigned int, std::string> paths_to_tdc_calib;
     
     // load TDC calibration
     for (int i=1; i<=4; i++) {
@@ -55,9 +60,24 @@ int main(int // argc
     int succ = 1;
     //    auto h = boost::histogram::make_histogram(boost::histogram::axis::regular<>(100, 0., 1.5e8, "t"));
     
-    TimesByMatrix times;
+    std::unordered_map<std::uint32_t, TimesByMatrix> endpoint_times;
+    for(uint32_t& endp: setup.getEndpoints()){
+      endpoint_times[endp] = TimesByMatrix();
+    }
 
+    for(auto& pair: endpoint_times){
+      initTimes(pair.second);
+    }
+
+    
+    boost::chrono::high_resolution_clock::time_point t0,t1;
+    int ntw = 0;
+    double proc_time = 0;
+    
     while( succ ) {
+
+      t0 = boost::chrono::high_resolution_clock::now();
+      
       succ = unpacker::get_time_window(meta_data,
                                        original_data,
                                        filtered_data,
@@ -66,31 +86,29 @@ int main(int // argc
                                        fp);
       
       
+
       
       for (auto const &pair: original_data){
 
-        assembleSignals(pair.first, pair.second, times, setup);  
+        assembleSignals(pair.first, pair.second, endpoint_times[pair.first], setup);  
 
       }
-      //   printf("{%02x\n", pair.first);
-          
-          // for (auto const &val : pair.second){
-          //   printf("\t%02x (%d, %d, %.0f),\n", val.sample,
-          //          val.is_falling_edge,
-          //          val.channel_id,
-          //          val.time);
-            
-          //   h(val.time);
-            
 
-        //          }
-          
-        //          printf("}\n");
+      t1 = boost::chrono::high_resolution_clock::now();
+
+      proc_time += boost::chrono::duration_cast<boost::chrono::microseconds>(t1-t0).count();
+      ntw++;
       
-      //      break;
+      if(ntw == 10000)break;
+      
     }
+    
+    double avg_proc_time = proc_time / ntw;
+    std::cout << "Average TW processing time: " << avg_proc_time << " us" << std::endl;
+    
 
 
+    
     // print histogram
     // std::ostringstream os;
     // for (auto x : indexed(h, boost::histogram::coverage::all)) {

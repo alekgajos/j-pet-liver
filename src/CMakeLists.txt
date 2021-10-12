@@ -13,6 +13,9 @@ set(SOURCES
 
 add_executable(${EXECUTABLE} ${SOURCES})
 
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 target_compile_options(
   ${EXECUTABLE}
   PRIVATE
@@ -23,6 +26,6 @@ target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../
 
 target_link_libraries(${EXECUTABLE} PRIVATE
   nlohmann_json::nlohmann_json
-  ${Boost_LIBRARIES}
+  Boost::chrono
   )
 

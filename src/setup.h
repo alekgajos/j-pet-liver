@@ -73,6 +73,10 @@ public:
   const Channel& findChannel(std::uint32_t addr, std::uint8_t ch) const {
     return fEndpointToChannel.at(addr).at(ch);
   }
+
+  std::vector<uint32_t>& getEndpoints(){
+    return fEndpoints;
+  }
   
 private:
   void loadFromFile(const char* filename);

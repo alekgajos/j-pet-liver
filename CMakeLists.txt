@@ -14,23 +14,14 @@ include(FindPkgConfig)
 include(ExternalProject)
 include(FetchContent)
 
-
-add_subdirectory(src/)
-
 set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.70 REQUIRED COMPONENTS
   chrono
   )
 
 make_directory(external/)
 
-# ExternalProject_Add(djpet_software
-#   GIT_REPOSITORY https://aleksander_gajos@bitbucket.org/fpgafais/djpet_software.git
-#   PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external/
-r #   GIT_TAG c2846e15
-#   CONFIGURE_COMMAND ""
-#   BUILD_COMMAND ""
-#   INSTALL_COMMAND ""
-#   )
-
 add_subdirectory(external/json)
+add_subdirectory(src/)
