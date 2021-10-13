@@ -60,14 +60,11 @@ int main(int // argc
     int succ = 1;
     //    auto h = boost::histogram::make_histogram(boost::histogram::axis::regular<>(100, 0., 1.5e8, "t"));
     
-    std::unordered_map<std::uint32_t, TimesByMatrix> endpoint_times;
-    for(uint32_t& endp: setup.getEndpoints()){
-      endpoint_times[endp] = TimesByMatrix();
-    }
+    Reconstructor reco(setup);
 
-    for(auto& pair: endpoint_times){
-      initTimes(pair.second);
-    }
+
+
+
 
     
     boost::chrono::high_resolution_clock::time_point t0,t1;
@@ -85,14 +82,10 @@ int main(int // argc
                                        paths_to_tdc_calib,
                                        fp);
       
-      
+      reco.reconstruct(original_data);
 
       
-      for (auto const &pair: original_data){
-
-        assembleSignals(pair.first, pair.second, endpoint_times[pair.first], setup);  
-
-      }
+      
 
       t1 = boost::chrono::high_resolution_clock::now();
 

@@ -74,7 +74,7 @@ public:
     return fEndpointToChannel.at(addr).at(ch);
   }
 
-  std::vector<uint32_t>& getEndpoints(){
+  const std::vector<uint32_t>& getEndpoints() const{
     return fEndpoints;
   }
   
