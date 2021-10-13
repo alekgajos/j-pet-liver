@@ -9,11 +9,11 @@ void Reconstructor::reconstruct(std::unordered_map<unsigned int, ENDPData>& unpa
 
   resetTimes();
 
-  for (auto const &pair: unpacker_data){
+  for (auto const &pair: unpacker_data){ // loop over endpoints
     
     groupTimes(pair.first, pair.second, fEndpoint_times[pair.first]);  
 
-    for(int matrix = 0; matrix < 13; ++matrix){
+    for(int matrix = 0; matrix < 13; ++matrix){ // loop over matrices of an endpoint
       assembleLT(fEndpoint_times[pair.first][matrix],
                  fEndpoint_lt_times[pair.first][matrix]);
       
@@ -140,6 +140,8 @@ void Reconstructor::resetTimes() {
       fEndpoint_signals[endp][matrix].clear();
     }
   }
+
+  fHits.clear();
 }
 
 void Reconstructor::initTimes() {
@@ -153,8 +155,11 @@ void Reconstructor::initTimes() {
       }
       
       fEndpoint_lt_times[endp][matrix].reserve(100);
-    }
+      fEndpoint_signals[endp][matrix].reserve(1000);
+    }    
   }
+
+  fHits.reserve(1000);
 }
 
 void Reconstructor::init() {
@@ -165,5 +170,37 @@ void Reconstructor::init() {
   for(const uint32_t& endp: fSetup.getEndpoints()){
     fEndpoint_lt_times[endp] = LTTimesByMatrix();
   }
+    
+}
+
+void Reconstructor::matchHitsOnScin(const Signals& signals_a, const Signals& signals_b, const Scin& scin) {
+  for(uint i=0; i< signals_a.size(); ++i){
+    for(uint j=0; j< signals_b.size(); ++j){
+      if( fabs(signals_a.at(i).t - signals_b.at(j).t) < fHitTimeWindow ){
+        Hit hit(scin);
+        hit.t = 0.5*(signals_a.at(i).t + signals_b.at(j).t);
+        // @TODO: load eff vel calib
+        hit.z = (signals_a.at(i).t - signals_b.at(j).t)* 12.0;
+        fHits.push_back(hit);
+      }
+    }
+  }
+}
+
+void Reconstructor::matchHits() {
   
+  for(const auto& p: fSetup.fScins) {
+    int module_id = p.second.mod.id;
+    int local_scin = (p.first - 201) % 13;
+
+    uint32_t endp_a = fSetup.fModulesAside.at(module_id);
+    uint32_t endp_b = fSetup.fModulesBside.at(module_id);
+
+    matchHitsOnScin(fEndpoint_signals[endp_a][local_scin],
+                    fEndpoint_signals[endp_b][local_scin],
+                    p.second
+                    );    
+
+  }
+
 }

@@ -87,8 +87,6 @@ void Setup::loadFromFile(const char *filename) {
 void Setup::fillEndpointMapping() {
 
   int base_channel_offset = 2100;
-  std::unordered_map<int, uint32_t> modules_a_side;
-  std::unordered_map<int, uint32_t> modules_b_side;  
 
   for(int endp = 0 ; endp < 48; ++endp){
 
@@ -105,15 +103,15 @@ void Setup::fillEndpointMapping() {
     Side endpoint_side = fChannels.at(base_channel_offset + endpoint_offset).pm.matrix.side;
     Module& module = fChannels.at(base_channel_offset + endpoint_offset).pm.matrix.scin.mod;
     if(endpoint_side == A){
-      modules_a_side[module.id] = fEndpoints.at(endp);
+      fModulesAside[module.id] = fEndpoints.at(endp);
     } else {
-      modules_b_side[module.id] = fEndpoints.at(endp);
+      fModulesBside[module.id] = fEndpoints.at(endp);
     }
   }
 
   // build map of opposite endpoints
-  for(auto& p: modules_a_side){
-    fOppositeEndpoints[p.second] = modules_b_side.at(p.first);
+  for(auto& p: fModulesAside){
+    fOppositeEndpoints[p.second] = fModulesBside.at(p.first);
   }
 
 }

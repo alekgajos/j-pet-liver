@@ -78,11 +78,15 @@ public:
     return fEndpoints;
   }
   
+  // @TODO: maybe add accessors
+  std::unordered_map<int, uint32_t> fModulesAside;
+  std::unordered_map<int, uint32_t> fModulesBside;
+  std::unordered_map<int, Scin> fScins;
+
 private:
   void loadFromFile(const char* filename);
 
   std::unordered_map<int, Module> fModules;
-  std::unordered_map<int, Scin> fScins;
   std::unordered_map<int, Matrix> fMatrices;
   std::unordered_map<int, PM> fPMs;
   std::unordered_map<int, Channel> fChannels;

@@ -34,6 +34,13 @@ struct Signal {
   double multiplicity;
 };
 
+struct Hit {
+  double t;
+  double z;
+  const Scin& scin;
+  Hit(const Scin& p_scin): scin(p_scin){}
+};
+
 using Times = std::vector<Time>;
 using TimesByThr = std::array<Times, 2>;
 using TimesByPM = std::array<TimesByThr, 4>;
@@ -60,7 +67,9 @@ private:
   void groupTimes(uint32_t endp, const ENDPData& endpoint_data, TimesByMatrix& output_times);
   void assembleLT(const TimesByPM& times, LTTimes& output_times);
   void assembleSignals(const LTTimes& times, Signals& output_signals);
-  
+  void matchHits();
+  void matchHitsOnScin(const Signals& signals_a, const Signals& signals_b, const Scin& scin);
+
   void resetTimes();
   void initTimes();
 
@@ -71,9 +80,12 @@ private:
   std::unordered_map<std::uint32_t, TimesByMatrix> fEndpoint_times;
   std::unordered_map<std::uint32_t, LTTimesByMatrix> fEndpoint_lt_times;
   std::unordered_map<std::uint32_t, SignalsByMatrix> fEndpoint_signals;
-
-  double fLeadTimeWindow = 10000.0;
   
+  std::vector<Hit> fHits;
+
+  double fLeadTimeWindow = 10000.0; // ns
+  double fHitTimeWindow = 10.0; // ns
+
 };
 
 
