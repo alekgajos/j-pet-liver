@@ -37,8 +37,8 @@ void Reconstructor::assembleSignals(const LTTimes &times,
     signal.tot_sum = times.at(i).tot;
     signal.t = times.at(i).t;
     signal.multiplicity = 1;
-    
-    uint k=0;
+
+    uint k=1;
     while( i+k < times.size()){
       if(fabs(times.at(i+k).t - start_time) < fLeadTimeWindow){
         signal.tot_sum += times.at(i+k).tot;
@@ -57,11 +57,8 @@ void Reconstructor::assembleSignals(const LTTimes &times,
     signal.t /= 1000.;
     signal.tot_sum /= 1000.;
 
-    std::cout << signal.multiplicity << " : " <<
-    signal.tot_sum / signal.multiplicity  << std::endl;
     }
-  
-  
+    
 }
 
 void Reconstructor::groupTimes(uint32_t endp, const ENDPData &endp_data, TimesByMatrix& output_times) {

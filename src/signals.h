@@ -3,6 +3,8 @@
 
 #include <bits/stdint-uintn.h>
 #include <cstdint>
+#include <set>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wunused-label"
@@ -29,7 +31,7 @@ struct LTpair {
 struct Signal {
   double t;
   double tot_sum;
-  double multiplicity;  
+  double multiplicity;
 };
 
 using Times = std::vector<Time>;
