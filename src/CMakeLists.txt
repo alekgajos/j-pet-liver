@@ -11,10 +11,14 @@ set(SOURCES
   liver.cpp
   )
 
+# set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+# set(BUILD_SHARED_LIBS OFF)
+# set(CMAKE_EXE_LINKER_FLAGS "-static")
+
 add_executable(${EXECUTABLE} ${SOURCES})
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 target_compile_options(
   ${EXECUTABLE}
