@@ -110,7 +110,7 @@ void Reconstructor::assembleLT(const TimesByPM& times, LTTimes& output_times) {
             p.pm = pm;
             p.thr = thr;
             p.t = last_lead->t;
-            p.tot = fabs(times[pm][thr].at(i).t - last_lead->t);
+            p.tot = abs(times[pm][thr].at(i).t - last_lead->t);
             output_times.push_back(p);
             searching_trail = false;
             last_lead = nullptr;
@@ -176,9 +176,9 @@ void Reconstructor::init() {
 void Reconstructor::matchHitsOnScin(const Signals& signals_a, const Signals& signals_b, const Scin& scin) {
   for(uint i=0; i< signals_a.size(); ++i){
     for(uint j=0; j< signals_b.size(); ++j){
-      if( fabs(signals_a.at(i).t - signals_b.at(j).t) < fHitTimeWindow ){
+      if( abs(signals_a.at(i).t - signals_b.at(j).t) < fHitTimeWindow ){
         Hit hit(scin);
-        hit.t = 0.5*(signals_a.at(i).t + signals_b.at(j).t);
+        hit.t = (signals_a.at(i).t + signals_b.at(j).t) >> 2;
         // @TODO: load eff vel calib
         hit.z = (signals_a.at(i).t - signals_b.at(j).t)* 12.0;
         fHits.push_back(hit);

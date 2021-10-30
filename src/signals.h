@@ -17,25 +17,25 @@ using TWData = std::map<uint32_t, std::vector<unpacker::hit_t>>;
 using ENDPData = std::vector<unpacker::hit_t>;
 
 struct Time {
-  double t;
+  unsigned int t;
   bool leading;
 };
 
 struct LTpair {
-  double t;
-  double tot;
+  unsigned int t;
+  unsigned int tot;
   std::uint8_t pm;
   std::uint8_t thr;
 };
 
 struct Signal {
-  double t;
-  double tot_sum;
-  double multiplicity;
+  unsigned int t;
+  unsigned int tot_sum;
+  int multiplicity;
 };
 
 struct Hit {
-  double t;
+  unsigned int t;
   double z;
   const Scin& scin;
   Hit(const Scin& p_scin): scin(p_scin){}
@@ -83,8 +83,8 @@ private:
   
   std::vector<Hit> fHits;
 
-  double fLeadTimeWindow = 10000.0; // ns
-  double fHitTimeWindow = 10.0; // ns
+  unsigned int fLeadTimeWindow = 10000; // ps
+  unsigned int fHitTimeWindow = 10000; // ps
 
 };
 
