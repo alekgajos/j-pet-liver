@@ -83,8 +83,8 @@ private:
   
   std::vector<Hit> fHits;
 
-  double fLeadTimeWindow = 10000.0; // ns
-  double fHitTimeWindow = 10.0; // ns
+  double fLeadTimeWindow = 10000.0; // ps
+  double fHitTimeWindow = 10000.0; // ps
 
 };
 
