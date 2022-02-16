@@ -99,7 +99,7 @@ int main(int // argc
     double avg_proc_time = proc_time / ntw;
     std::cout << "Average TW processing time: " << avg_proc_time << " us" << std::endl;
     
-
+    fp.close();
 
     
     // print histogram
