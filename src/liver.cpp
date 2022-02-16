@@ -10,6 +10,16 @@
 #include <vector>
 #include <unordered_map>
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 #include <boost/format.hpp>
 #include <boost/histogram.hpp>
 #include <boost/chrono.hpp>
@@ -24,6 +34,13 @@
 #include "setup.h"
 #include "signals.h"
 
+struct membuf: std::streambuf {
+     membuf(char* begin, char* end) {
+         this->setg(begin, begin, end);
+     }
+};
+
+
 int main(int // argc
          , char* argv[]) {
 
@@ -31,10 +48,65 @@ int main(int // argc
   auto filename = "../data/test_modular_setup_v10.json";
 
   Setup setup(filename);
+
+  // open TCP socket & read data
+  long int port = 6002;  
+  int fd = 0;
+  fd = socket(AF_INET, SOCK_STREAM, 0);
+  struct sockaddr_in in_addr;
+  memset(&in_addr, 0, sizeof(in_addr));
+
+  in_addr.sin_family = AF_INET;
+  //in_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  in_addr.sin_port = htons(port);
+  in_addr.sin_addr.s_addr = inet_addr("172.16.32.25");
+
+  socklen_t server_len = sizeof(in_addr);
+  if(connect(fd, (struct sockaddr*)&in_addr, server_len) < 0){
+    perror("Connect");
+    exit(EXIT_FAILURE);
+  }
+
+  struct timeval timeout;      
+  timeout.tv_sec = 10;
+  timeout.tv_usec = 0;
   
+  if (setsockopt (fd, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                  sizeof timeout) < 0){
+    perror("setsockopt failed\n");
+  }
+  
+  // int flags = fcntl(fd, F_GETFL);
+  // flags |= O_NONBLOCK;
+  // fcntl(fd, F_SETFL, flags);
+
+  char buf[256];
+  int nread = read(fd, buf, 256);
+  std::cout << "First read: " << nread << " bytes" << std::endl;
+
+  write(fd, "\n", 1);
+  
+  strcpy(buf, "getevt    \n");
+  write(fd, buf, 11);
+
+  char data[256000];
+  
+  long int total_read = 0;
+  //total_read = read(fd, data, 256000);
+
+  do{                          
+    nread = read(fd, data + total_read, 256);
+    total_read += nread;
+  } while(nread > 0);
+
+  std::cout << "Total read: " << total_read << " bytes" << std::endl;
+
+  membuf       sbuf(data, data+total_read);
+  std::istream in(&sbuf);
+ 
   std::ifstream fp( argv[1], std::ios::in | std::ios::binary );
 
-    std::vector<unsigned int> data;
+  //    std::vector<unsigned int> data;
 
     unpacker::meta_t meta_data;
     std::unordered_map<unsigned int, ENDPData> original_data;
@@ -62,10 +134,6 @@ int main(int // argc
     
     Reconstructor reco(setup);
 
-
-
-
-
     
     boost::chrono::high_resolution_clock::time_point t0,t1;
     int ntw = 0;
@@ -79,7 +147,9 @@ int main(int // argc
                                        original_data,
                                        filtered_data,
                                        preproc_data,
-                                       fp);
+                                       // fp
+                                       in
+                                       );
       
       reco.reconstruct(original_data);
 

@@ -21,8 +21,10 @@ void Reconstructor::reconstruct(std::unordered_map<unsigned int, ENDPData>& unpa
                       fEndpoint_signals[pair.first][matrix]);
     }
   }
-  
-  
+
+  matchHits();
+  std::cout << fHits.size() << std::endl;
+    
 }
 
 void Reconstructor::assembleSignals(const LTTimes &times,
