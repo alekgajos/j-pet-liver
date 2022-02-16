@@ -1,6 +1,6 @@
 [submodule "external/json"]
 	path = external/json
 	url = https://github.com/nlohmann/json.git
-[submodule "external/djpet_software"]
-	path = external/djpet_software
-	url = https://aleksander_gajos@bitbucket.org/fpgafais/djpet_software.git
+[submodule "external/unpacker"]
+	path = external/unpacker
+	url = https://github.com/JPETTomography/j-pet-unpacker.git
