@@ -26,10 +26,9 @@ target_compile_options(
   -Wall -Wextra -Werror -pedantic
   )
 
-target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../external/djpet_software/Unpacker_v2/)
+target_include_directories(${EXECUTABLE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../external/unpacker/)
 
 target_link_libraries(${EXECUTABLE} PRIVATE
   nlohmann_json::nlohmann_json
   Boost::chrono
   )
-

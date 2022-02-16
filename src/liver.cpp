@@ -79,7 +79,6 @@ int main(int // argc
                                        original_data,
                                        filtered_data,
                                        preproc_data,
-                                       paths_to_tdc_calib,
                                        fp);
       
       reco.reconstruct(original_data);
