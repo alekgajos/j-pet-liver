@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <fstream>
 #include <iostream>
+#include <istream>
 #include <ostream>
 #include <string>
 #include <sstream>
@@ -40,7 +41,6 @@ struct membuf: std::streambuf {
      }
 };
 
-
 int main(int // argc
          , char* argv[]) {
 
@@ -76,24 +76,18 @@ int main(int // argc
     perror("setsockopt failed\n");
   }
   
-  // int flags = fcntl(fd, F_GETFL);
-  // flags |= O_NONBLOCK;
-  // fcntl(fd, F_SETFL, flags);
-
+  char data[256000];  
+  
   char buf[256];
-  int nread = read(fd, buf, 256);
-  std::cout << "First read: " << nread << " bytes" << std::endl;
+  long int total_read = read(fd, data, 256);
+  std::cout << "First read: " << total_read << " bytes" << std::endl;
 
   write(fd, "\n", 1);
   
   strcpy(buf, "getevt    \n");
   write(fd, buf, 11);
 
-  char data[256000];
-  
-  long int total_read = 0;
-  //total_read = read(fd, data, 256000);
-
+  int nread = 0;
   do{                          
     nread = read(fd, data + total_read, 256);
     total_read += nread;
@@ -133,7 +127,7 @@ int main(int // argc
     //    auto h = boost::histogram::make_histogram(boost::histogram::axis::regular<>(100, 0., 1.5e8, "t"));
     
     Reconstructor reco(setup);
-
+    unpacker::set_online_mode(true);
     
     boost::chrono::high_resolution_clock::time_point t0,t1;
     int ntw = 0;
@@ -150,7 +144,7 @@ int main(int // argc
                                        // fp
                                        in
                                        );
-      
+
       reco.reconstruct(original_data);
 
       
@@ -161,7 +155,7 @@ int main(int // argc
       proc_time += boost::chrono::duration_cast<boost::chrono::microseconds>(t1-t0).count();
       ntw++;
       
-      if(ntw == 10000)break;
+      //      if(ntw == 10000)break;
       
     }
     
