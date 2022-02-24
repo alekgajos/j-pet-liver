@@ -67,15 +67,6 @@ int main(// int // argc
     reader.connect();
 
     std::istream in = reader.getData();
-
-
-    char buf[256];
-    int n = 0;
-    while(!in.eof()){
-      in.read(buf, 1);
-      n++;
-    }
-    std::cout << "Read " << n << std::endl;
     
     int succ = 1;
     //    auto h = boost::histogram::make_histogram(boost::histogram::axis::regular<>(100, 0., 1.5e8, "t"));

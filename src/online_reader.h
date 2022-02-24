@@ -41,8 +41,8 @@ private:
   int m_socket;
   char m_buffer[256000];
   Membuf m_sbuffer;
-  size_t m_bytes_read = 0;
-  size_t m_header_size = 0;
+  long int m_bytes_read = 0;
+  long int m_header_size = 0;
 };
 
 #endif
