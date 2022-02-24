@@ -38,10 +38,7 @@ int main(// int // argc
 
   Setup setup(filename);
 
-  OnlineReader reader("172.16.32.25", 6002);
-  reader.connect();
 
-  std::istream in = reader.getData();
 
   //  std::ifstream fp( argv[1], std::ios::in | std::ios::binary );
 
@@ -65,6 +62,20 @@ int main(// int // argc
           paths_to_tdc_calib[ 0xa<<12 | i<<8 | j<< 4 ] = path_to_calib;
         }     
     }
+    
+    OnlineReader reader("172.16.32.25", 6002);
+    reader.connect();
+
+    std::istream in = reader.getData();
+
+
+    char buf[256];
+    int n = 0;
+    while(!in.eof()){
+      in.read(buf, 1);
+      n++;
+    }
+    std::cout << "Read " << n << std::endl;
     
     int succ = 1;
     //    auto h = boost::histogram::make_histogram(boost::histogram::axis::regular<>(100, 0., 1.5e8, "t"));

@@ -42,11 +42,10 @@ std::istream OnlineReader::getData(){
   write(m_socket, "getevt    \n", 11);
 
   m_bytes_read = m_header_size;
-  size_t nread = 0;
+  ssize_t nread = 0;
   do{                          
     nread = read(m_socket, m_buffer + m_header_size, 256);
     m_bytes_read += nread;
-    std::cout << "reading data" << std::endl;
   } while(nread > 0);
 
   std::cout << "Total read: " << m_bytes_read << " bytes" << std::endl;  

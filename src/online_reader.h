@@ -39,7 +39,7 @@ private:
   std::string m_daq_server;
   long int m_daq_port;  
   int m_socket;
-  char m_buffer[512000];
+  char m_buffer[256000];
   Membuf m_sbuffer;
   size_t m_bytes_read = 0;
   size_t m_header_size = 0;
