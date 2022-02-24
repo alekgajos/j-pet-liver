@@ -8,6 +8,7 @@ project(${EXECUTABLE} VERSION 0.1
 set(SOURCES
   setup.cpp
   signals.cpp
+  online_reader.cpp
   liver.cpp
   )
 
